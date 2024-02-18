@@ -99,6 +99,8 @@ If you don't want to use Docker, you want still build the image on your own syst
 ### Build
 <a name="build"></a>
 
+For Windows users, there seems to be a problem for systems with WSL installed. If you have WSL, use WSL directly with the Linux commands. Remember that `cd /mnt` allows you to change disks (e.g. `cd /mnt/c` to enter C:).
+
 1. Enter build environment :
 * `docker run --rm -it -v "$(pwd)":/root/env build-bdos` (Linux)
 * `docker run --rm -it -v "%cd%":/root/env build-bdos` (Windows CMD)
