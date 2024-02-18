@@ -1,7 +1,6 @@
 # Description: Dockerfile for building the environment for the OS
 
-# Use the gcc-cross-x86_64-elf image as the base image
-# This image is made by randomdude and is made for compiling
+# This image is an x86_64-elf-gcc toolchain
 FROM randomdude/gcc-cross-x86_64-elf
 
 # Install the necessary packages
