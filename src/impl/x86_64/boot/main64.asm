@@ -1,7 +1,6 @@
 global long_mode_start
 extern kernel_main
-extern print_key
-extern move_cursor
+extern handle_key
 
 section .text
 bits 64
@@ -27,7 +26,7 @@ kernel_loop:
     in al, 0x60
 
     movzx rdi, al
-    call print_key
+    call handle_key
 
     jmp kernel_loop
 

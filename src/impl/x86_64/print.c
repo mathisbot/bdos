@@ -62,13 +62,11 @@ void print_clear() {
 * @brief Move the cursor to the next line
 */
 void print_newline() {
-    col = 2;
+    col = 0;
 
     if (row < VGA_HEIGHT-1) {
         row++;
         move_cursor(col, row);
-        buffer[VGA_WIDTH*row] = (struct Char){character: '>', color: color,};
-        buffer[VGA_WIDTH*row + 1] = (struct Char){character: ' ', color: color,};
         return;
     }
 
@@ -81,8 +79,34 @@ void print_newline() {
         }
     }
     move_cursor(col, row);
-    buffer[VGA_WIDTH*row] = (struct Char){character: '>', color: color,};
-    buffer[VGA_WIDTH*row + 1] = (struct Char){character: ' ', color: color,};
+}
+
+/*
+* @brief Move the cursor to the next line and adds a "> " at the beginning
+*/
+void print_new_command_line() {
+    print_newline();
+    print_str("> ");
+}
+
+/*
+* @brief Delete the last character if possible
+*/
+void print_del_char() {
+    uint8_t deletable = 1;
+    if (col == 0 && row == 0) deletable = 0;
+    if (col == 2 && buffer[row*VGA_WIDTH].character == '>') deletable = 0;
+
+    if (!deletable) return;
+
+    if (col == 0) {
+        col = VGA_WIDTH-1;
+        row--;
+    } else {
+        col--;
+    }
+    buffer[VGA_WIDTH*row + col] = (struct Char){character: ' ', color: color,};
+    move_cursor(col, row);
 }
 
 /*
