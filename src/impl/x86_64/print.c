@@ -43,24 +43,15 @@ void move_cursor(uint8_t x, uint8_t y) {
 
 
 /*
-* @brief Clear one row of the screen
-*
-* @param row The row to clear
-*/
-void clear_row(size_t row) {
-    struct Char empty_char = (struct Char){character: ' ', color: color,};
-
-    for (size_t col=0; col<VGA_WIDTH; col++) {
-        buffer[VGA_WIDTH*row + col] = empty_char;
-    }
-}
-
-/*
 * @brief Clear the entire screen
 */
 void print_clear() {
-    for (size_t i = 0; i < VGA_HEIGHT; i++) {
-        clear_row(i);
+    struct Char empty_char = (struct Char){character: ' ', color: color,};
+
+    for (size_t row=0; row<VGA_HEIGHT; row++) {
+        for (size_t col=0; col<VGA_WIDTH; col++) {
+            buffer[VGA_WIDTH*row + col] = empty_char;
+        }
     }
     col = 0;
     row = 0;
@@ -71,11 +62,13 @@ void print_clear() {
 * @brief Move the cursor to the next line
 */
 void print_newline() {
-    col = 0;
+    col = 2;
 
     if (row < VGA_HEIGHT-1) {
         row++;
         move_cursor(col, row);
+        buffer[VGA_WIDTH*row] = (struct Char){character: '>', color: color,};
+        buffer[VGA_WIDTH*row + 1] = (struct Char){character: ' ', color: color,};
         return;
     }
 
@@ -87,10 +80,9 @@ void print_newline() {
             buffer[VGA_WIDTH*row + col] = (struct Char){character: ' ', color: color,};
         }
     }
-
     move_cursor(col, row);
-
-    clear_row(VGA_WIDTH - 1);
+    buffer[VGA_WIDTH*row] = (struct Char){character: '>', color: color,};
+    buffer[VGA_WIDTH*row + 1] = (struct Char){character: ' ', color: color,};
 }
 
 /*
