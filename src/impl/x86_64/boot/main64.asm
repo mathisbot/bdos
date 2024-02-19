@@ -1,6 +1,7 @@
 global long_mode_start
 extern kernel_main
 extern print_key
+extern move_cursor
 
 section .text
 bits 64
@@ -21,7 +22,7 @@ long_mode_start:
 kernel_loop:
     call check_keyboard_status
     test eax, eax
-    jz .no_data_available
+    jz kernel_loop
 
     in al, 0x60
 
@@ -34,9 +35,6 @@ kernel_loop:
 
 
 ; Handling keyboard input
-.no_data_available:
-    nop
-    jmp kernel_loop
 ; EAX = 0 if no data available, 1 if data available
 check_keyboard_status:
     in al, 0x64
