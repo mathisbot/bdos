@@ -13,4 +13,13 @@ long_mode_start:
     mov gs, ax
 
 	call kernel_main  ; kernel/main.c
+
+    ; Get keyboard input
+    mov ah, 0  ; Read
+    int 0x16  ; BIOS interrupt
+
+    push al
+    call print_char  ; kernel/print.c
+    pop al
+
     hlt
