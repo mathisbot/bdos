@@ -54,9 +54,10 @@ Other important scancodes:
 - 0x0E: Backspace
 */
 
-static char command_buffer[65536];
+static char command_buffer[8192];
 static int command_buffer_index = 0;
-
+char command[1024];
+char args[8192];
 
 /* ----- KERNEL ---- */
 
@@ -73,19 +74,33 @@ void kernel_main() {
 }
 
 
+/* ----- COMMANDS ----- */
+
+/*
+Must be the same as in command.c
+This is a temporary solution of a problem I had with the linker
+Currently, adding a command recquires to :
+- Add it to the list down there
+- Add it to the list of functions in command.c
+- Add its function to the list of functions in command.c
+- Add its function to the list of functions in command.h
+*/
+static const command_t command_list[] = {
+    {name:"HELP", desc:"Shows this message.", long_desc:"HELP <command> to show more information about <command>.", function:help},
+    {name:"ECHO", desc:"ECHO <args> to print <args> on the screen.", long_desc:"", function:echo},
+};
+
 void handle_command() {
-    // Temporary way to handle commands
     command_buffer[command_buffer_index] = '\0';
-    char command[65536];
-    char args[65536];
     extract_command(command_buffer, command, args);
-    if (string_compare(command, "HELP") == 1) {
-        help();
-        return;
+    for (int i = 0; i < sizeof(command_list) / sizeof(command_list[0]); i++) {
+        if (string_compare(command_list[i].name, command) == 1) {
+            // A function always takes a char* as argument
+            command_list[i].function(args);
+            return;
+        }
     }
-    else {
-        print_str("Command not found. Type HELP for a list of commands.");
-    }    
+    print_str("Command not found. Type HELP for a list of commands.");
 }
 
 
@@ -111,8 +126,7 @@ void handle_key(char scancode) {
     else if (scancode == 0x1C) {
         if (command_buffer_index != 0) {
             print_newline();
-            // handle_command();  // This function makes the kernel crash
-            print_str("Command not found.");
+            handle_command();
             command_buffer_index = 0;
         }
         print_new_command_line();
