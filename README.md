@@ -54,8 +54,9 @@ While modern operating systems have evolved to be highly complex and feature-ric
 ### Built with
 <a name="built-with"></a>
 
-* [C][c-url] (Standard C17)
+* [C][c-url]
 * [ASM][asm-url]
+* [GRUB][grub-url]
 
 ## Getting started
 <a name="getting-started"></a>
@@ -75,7 +76,7 @@ If you want to edit/use the code, follow these steps:
 
 * Docker : [Docker][docker-url] is used to build and use the buildenv container.
 
-If you don't want to use Docker, you want still build the image on your own system. However, you will need to use Linux. You will need :
+If you don't want to use Docker, you can still build the image on your own system. You will need to be on Linux (if you want to use Windows, you're on your own) and you will need :
 
 * C : A C compiler. I recommend using GCC.
 * ASM : An ASM compiler. I recommend using NASM.
@@ -91,7 +92,7 @@ If you don't want to use Docker, you want still build the image on your own syst
 
   or download code as Zip.
 
-2. Build an image for the build environment:
+2. Build a Docker image of the build environment:
 ```sh
   docker build buildenv -t build-bdos
 ```
@@ -99,14 +100,14 @@ If you don't want to use Docker, you want still build the image on your own syst
 ### Build
 <a name="build"></a>
 
-For Windows users, there seems to be a problem for systems with WSL installed. If you have WSL, use WSL directly with the Linux commands. Remember that `cd /mnt` allows you to change disks (e.g. `cd /mnt/c` to enter C:).
-
 1. Enter build environment :
 * `docker run --rm -it -v "$(pwd)":/root/env build-bdos` (Linux)
 * `docker run --rm -it -v "%cd%":/root/env build-bdos` (Windows CMD)
 * `docker run --rm -it -v "${pwd}:/root/env" build-bdos` (Windows PS)
 
 Don't forget to stop it later.
+
+For Windows users, there seems to be a problem on systems having WSL installed. If you have WSL installed on your system, use WSL CLI directly with the Linux commands, otherwise there will be problems with disk sharing (`-v`). Remember that `cd /mnt` allows you to change disks (e.g. `cd /mnt/c` to enter C: from WSL).
 
 2. Build the image
 ```sh
@@ -120,9 +121,9 @@ Don't forget to stop it later.
 
 Please note that B-DOS is made for x86-64 architecture.
 
-Once you have built the project and have successfully got the ISO file, you can use it as any other ISO file : make a bootable USB key, use it in Qemu (Please use `qemu-system-x86_64 -cdrom` to launch), ...
+Once you've successfully built the project and obtained the ISO file, you can use it like any other ISO file: create a bootable USB stick, use Qemu to make a virtual machine (`qemu-system-x86_64 -cdrom <iso>` to launch), etc.
 
-Currently, B-DOS does not do much things.
+Currently, B-DOS does not do much things. You can press keys that are recognized, the interface resembles a CLI and the command parsing is on its way.
 
 <p align="right">(<a href="#readme-top">Up</a>)</p>
 
@@ -136,4 +137,5 @@ Various problems and bugs may arise during development. If no obvious solution i
 
 [c-url]: https://fr.wikipedia.org/wiki/C_(langage)
 [asm-url]: https://en.wikipedia.org/wiki/Assembly_language
+[grub-url]: https://www.gnu.org/software/grub/
 [docker-url]: https://www.docker.com
